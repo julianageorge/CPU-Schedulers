@@ -25,8 +25,8 @@ public class Process implements Comparable<Process> {
         this.processColor=Color;
         this.processArrivalTime=arrivalTime;
         this.processBurstTime=BurstTime;
-        this.priorityNum=Priority;
         this.quantumTime=quantumTime;
+        this.priorityNum=Priority;
     }
     public Process() {
         setRemainingTime(processBurstTime);

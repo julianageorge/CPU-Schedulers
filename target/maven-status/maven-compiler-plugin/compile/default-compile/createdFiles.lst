@@ -1,0 +1,6 @@
+CPU\Schedulers\Priority_Scheduling.class
+CPU\Process.class
+CPU\Schedulers\FCAI.class
+org\os\Main.class
+CPU\Schedulers\SJF.class
+CPU\Schedulers\SRTF.class
