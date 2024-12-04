@@ -62,7 +62,7 @@ public class Priority_Scheduling {
         double averageWaitingTime = (double) totalWaitingTime / processes.size();
         double averageTurnaroundTime = (double) totalTurnaroundTime / processes.size();
 
-        System.out.printf("\nAverage Waiting Time: %.2f\n", averageWaitingTime);
+        System.out.printf("Average Waiting Time: %.2f\n", averageWaitingTime);
         System.out.printf("Average Turnaround Time: %.2f\n", averageTurnaroundTime);
     }
 }
