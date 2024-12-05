@@ -5,6 +5,6 @@ import CPU.Process;
 import java.util.ArrayList;
 
 public class SRTF {
-    public SRTF(ArrayList<Process> processes) {
+    public SRTF(ArrayList<Process> processes, int contextSwitchTime) {
     }
 }
