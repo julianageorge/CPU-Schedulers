@@ -34,7 +34,7 @@ public class Main {
                 RRTimeQuantum = input.nextInt();
             }
 
-            processes.add(new Process(ProcessName, ProcessColor, ArrivalTime, BurstTime, priorityNum, (flag ? RRTimeQuantum : 0)));
+            processes.add(new Process(ProcessName,i,ProcessColor, ArrivalTime, BurstTime, priorityNum, (flag ? RRTimeQuantum : 0)));
         }
 
         if (!flag) {

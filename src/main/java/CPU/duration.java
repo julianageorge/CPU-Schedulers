@@ -7,15 +7,16 @@ public class duration {
     public int processArrivalTime;
     public int processBurstTime;
     public int id;
+    public int remaingtime;
     public String status;
-    public duration(String name, int start, int end, int id, String status , int burstTime , int arrivalTime) {
-        this.ProcessName = name;
-        this.StartTime = start;
-        this.endTime = end;
-        this.id = id;
+    public duration(String processName, int startTime, int endTime, int processId, String status, int remainingTime, int arrivalTime) {
+        this.ProcessName = processName;
+        this.StartTime = startTime;
+        this.endTime = endTime;
+        this.id = processId;
         this.status = status;
-        this.processArrivalTime = arrivalTime ;
-        this.processBurstTime = burstTime;
+        this.remaingtime = remainingTime;
+        this.processArrivalTime = arrivalTime;
     }
 
     public int getStartTime() {
@@ -40,5 +41,16 @@ public class duration {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getProcessName() {
+        return ProcessName;
+    }
+    @Override
+    public String toString() {
+        return String.format(
+                "Process: %s, Start Time: %d, End Time: %d, Process ID: %d, Status: %s, Remaining Time: %d, Arrival Time: %d",
+                ProcessName, StartTime, endTime, id, status,remaingtime , processArrivalTime
+        );
     }
 }
