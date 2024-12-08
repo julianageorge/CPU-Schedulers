@@ -33,11 +33,15 @@ public class SJF {
 //                    process.setPriorityNum(process.getBurstTime());
                 }
             }
-
-            for (Process process : readyQueue) {
+            PriorityQueue<Process> temp = new PriorityQueue<>(Comparator.comparingInt(Process::getPriorityNum)
+                    .thenComparingInt(Process::getArrivalTime));
+            while (! readyQueue.isEmpty()) {
+                Process process= readyQueue.poll();
                 int waitingTime = currentTime - process.getArrivalTime();
                 process.setPriorityNum(process.getPriorityNum() - (waitingTime / agingFactor));// checking
+                temp.add(process);
             }
+            readyQueue = temp;
 
             if (!readyQueue.isEmpty()) {
                 Process processToExecute = readyQueue.poll();
