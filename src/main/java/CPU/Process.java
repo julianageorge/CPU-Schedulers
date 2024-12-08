@@ -6,14 +6,13 @@ public class Process implements Comparable<Process> {
     private int processArrivalTime;
     private int processBurstTime;
     private int id;
-    private int priorityNum;
+    private int priorityNum;//
     private int quantumTime;// need in RR
     private int turnAroundTime;
     private int endTime;
     private int StartTime;
     private int remainingTime;
     private int waitingTime;
-
 
     public Process(String Name,int id,String Color,int arrivalTime,int BurstTime,int Priority){
         this.processName=Name;
@@ -23,13 +22,14 @@ public class Process implements Comparable<Process> {
         this.priorityNum=Priority;
         this.id=id;
     }
-    public Process(String Name,String Color,int arrivalTime,int BurstTime,int Priority,int quantumTime){// if RR
+    public Process(String Name,int id,String Color,int arrivalTime,int BurstTime,int Priority,int quantumTime){// if RR
         this.processName=Name;
         this.processColor=Color;
         this.processArrivalTime=arrivalTime;
         this.processBurstTime=BurstTime;
         this.quantumTime=quantumTime;
         this.priorityNum=Priority;
+        this.id=id;
     }
     public Process() {
         setRemainingTime(processBurstTime);
@@ -111,11 +111,12 @@ public class Process implements Comparable<Process> {
         this.turnAroundTime=AroundTime;
     }
 
+
     public Integer getId() {
         return id;
     }
-    public void setId(int id) {
-        this.id=id;
-    }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 }
