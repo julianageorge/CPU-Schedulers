@@ -13,6 +13,8 @@ public class Process implements Comparable<Process> {
     private int StartTime;
     private int remainingTime;
     private int waitingTime;
+    private int remainingQuantum;
+    private int fcaiFactor;
 
     public Process(String Name,int id,String Color,int arrivalTime,int BurstTime,int Priority){
         this.processName=Name;
@@ -118,5 +120,21 @@ public class Process implements Comparable<Process> {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getRemainingQuantum() {
+        return remainingQuantum;
+    }
+
+    public void setRemainingQuantum(int remainingQuantum) {
+        this.remainingQuantum = remainingQuantum;
+    }
+
+    public int getFcaiFactor() {
+        return fcaiFactor;
+    }
+
+    public void setFcaiFactor(int fcaiFactor) {
+        this.fcaiFactor = fcaiFactor;
     }
 }
