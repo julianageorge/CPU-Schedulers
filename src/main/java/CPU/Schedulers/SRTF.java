@@ -68,6 +68,7 @@ public class SRTF {
                                 startTime,
                                 currentTime,
                                 currentProcess.getId(),
+                                currentProcess.getColor(),
                                 "Working",
                                 currentProcess.getRemainingTime(),
                                 currentProcess.getArrivalTime()
@@ -110,6 +111,7 @@ public class SRTF {
                             startTime,
                             currentTime,
                             shortedProcess.getId(),
+                            shortedProcess.getColor(),
                             "Completed",
                             0,
                             shortedProcess.getArrivalTime()
@@ -147,5 +149,8 @@ public class SRTF {
         double averageTurnaroundTime = (double) totalTurnaroundTime / completedProcess.size();
         System.out.printf("Average Waiting Time: %.2f\n", averageWaitingTime);
         System.out.printf("Average Turnaround Time: %.2f\n", averageTurnaroundTime);
+    }
+    public ArrayList<duration> getduration() {
+        return durations;
     }
 }
