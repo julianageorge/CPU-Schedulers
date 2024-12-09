@@ -1,8 +1,6 @@
 package CPU.Schedulers;
 
 import CPU.Process;
-import CPU.duration;
-
 import java.util.*;
 
 public class FCAI {
@@ -10,7 +8,7 @@ public class FCAI {
     private double V1, V2;
     private int contextSwitchTime;
     private int totalTime;
-    private ArrayList<duration> durations;
+    private boolean nextInArival = false , nextInFcai = false;
 
     public FCAI(ArrayList<Process> processes , int contextSwitch) {
         this.processes = processes;
@@ -43,7 +41,7 @@ public class FCAI {
     }
 
     private int calculateFCAIFactor(Process process) {
-        double FcaiFactor = (10 - process.getPriorityNum()) + (process.getArrivalTime() / V1) + (process.getRemainingTime() / V2);
+        double FcaiFactor = (10 - process.getPriorityNum()) + (int)Math.ceil(process.getArrivalTime() / V1) + (int)Math.ceil(process.getRemainingTime() / V2);
         return  (int)Math.ceil(FcaiFactor) ;
     }
 
@@ -59,6 +57,7 @@ public class FCAI {
                 .thenComparingInt(Process::getPriorityNum));
         Queue<Process> queue = new LinkedList<>();
         ArrayList<Process> completedProcess = new ArrayList<>();
+        ArrayList<Process> underProcess = new ArrayList<>();
         Queue<Process> readyQueue ;
         Process shortestProcess = null , currentProcess = null;
         while (completedProcess.size()<n) {
@@ -67,15 +66,25 @@ public class FCAI {
                     queue.add(process);
                 }
             }
-            readyQueue = check(queue);
+//            readyQueue = check(queue);
             if(!queue.isEmpty()){
-                currentProcess = queue.poll();
-                shortestProcess = readyQueue.peek();
-//                if(currentProcess!=shortestProcess && shortestProcess!=null){
-//                    currentTime += contextSwitchTime;
-////                    currentProcess = shortestProcess;
-//                }
-//                else {
+                if(!nextInFcai && !nextInArival) {
+                    currentProcess = queue.poll();
+                }else {
+                    if(nextInFcai) {
+                        currentProcess = shortestProcess;
+                        nextInFcai = false;
+                    } else {
+                        nextInArival = false;
+                        for (Process process : queue){
+//                            assert currentProcess != null;
+                            if(process.getArrivalTime() > currentProcess.getArrivalTime()){
+                                currentProcess = process;
+                                break;
+                            }
+                        }
+                    }
+                }
                     int timeToExecute = (int) Math.ceil(currentProcess.getQuantum() * 0.4);
                     executionOrder.add(currentProcess.getName());
                     if (timeToExecute > currentProcess.getRemainingTime()) {
@@ -83,59 +92,59 @@ public class FCAI {
                         currentProcess.setEndTime(currentTime);
                         currentProcess.setRemainingTime(0);
                         currentProcess.setRemainingQuantum(0);
+                        completedProcess.add(currentProcess);
+                        processes.remove(currentProcess);
+                        queue.remove(currentProcess);
+                        nextInArival = true;
                     }
                     else {
                         currentProcess.setRemainingTime(currentProcess.getRemainingTime() - timeToExecute);
                         currentTime += timeToExecute;
                         currentProcess.setRemainingQuantum(currentProcess.getQuantum() - timeToExecute);
                     }
-                    if (currentProcess.getRemainingTime() == 0) {
-                        completedProcess.add(currentProcess);
-                        processes.remove(currentProcess);
-                    }
-                    while (currentProcess.getRemainingQuantum()>0) {
-                        queue.add(currentProcess);
+                    while (currentProcess.getRemainingQuantum()>0 && currentProcess .getRemainingTime() > 0 ) {
+//                        queue.add(currentProcess);
                         for (Process process : processes){
                             if(process.getArrivalTime() <= currentTime && !queue.contains(process) && process.getRemainingTime() > 0){
                                 queue.add(process);
                             }
                         }
                         readyQueue = check(queue);
-                        queue.remove(currentProcess);
+//                        queue.remove(currentProcess);
                         shortestProcess = readyQueue.poll();
                         if (shortestProcess != currentProcess) {
-                            queue.add(currentProcess);
+                            nextInFcai =true;
                             currentProcess.setQuantum(currentProcess.getQuantum()+ currentProcess.getRemainingQuantum());
+                            queue.add(currentProcess);
                             break;
                         } else {
                             currentTime++;
                             currentProcess.setRemainingQuantum(currentProcess.getRemainingQuantum() - 1);
+                            currentProcess.setRemainingTime(currentProcess.getRemainingTime()-1);
                         }
                     }
                     if(currentProcess.getRemainingQuantum()==0){
                         if(currentProcess.getRemainingTime() > 0 ){
                         currentProcess.setQuantum(currentProcess.getQuantum()+2);
-                        }
-                        else {
-                            completedProcess.add(currentProcess);
-                            processes.remove(currentProcess);
+                            if(!nextInFcai) {
+                                readyQueue = check(queue);
+                                readyQueue.remove(currentProcess);
+                                shortestProcess = readyQueue.poll();
+                                nextInFcai = true;
+                            }
                         }
                     }
-//                }
-//                if(currentProcess.getRemainingTime()>0){
-//                    queue.add(currentProcess);
-//                }else{
-//                    processes.remove(currentProcess);
-//                    completedProcess.add(currentProcess);
-//                }
+                    if(currentProcess.getRemainingTime() == 0 ) {
+                        completedProcess.add(currentProcess);
+                        processes.remove(currentProcess);
+                        queue.remove(currentProcess);
+                        nextInArival = true ;
+                    }
             }else {
                 currentTime++;
             }
         }
         System.out.println("Processes Execution Order: " + String.join(" - ", executionOrder));
 
-    }
-    public ArrayList<duration> getduration() {
-        return durations;
     }
 }
