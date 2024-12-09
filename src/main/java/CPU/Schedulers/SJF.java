@@ -10,6 +10,7 @@ import java.util.PriorityQueue;
 public class SJF {
     private ArrayList<Process> processes;
     private ArrayList<duration> durations;
+    private ArrayList<Process> completedProcess = new ArrayList<>();
     private int contextSwitchTime;
     private int agingFactor = 1;
     public SJF(ArrayList<Process> processes, int contextSwitchTime) {
@@ -27,7 +28,7 @@ public class SJF {
                 .thenComparingInt(Process::getArrivalTime));
         int currentTime = 0, totalWaitingTime = 0, totalTurnaroundTime = 0;
         ArrayList<String> executionOrder = new ArrayList<>();
-        ArrayList<Process> completedProcess = new ArrayList<>();
+
 
         while (!processes.isEmpty()) {
             for (Process process : processes) {
@@ -109,6 +110,9 @@ public class SJF {
     }
     public ArrayList<duration> getduration() {
         return durations;
+    }
+    public  ArrayList<Process> getCompletedProcess(){
+        return completedProcess;
     }
 
 }

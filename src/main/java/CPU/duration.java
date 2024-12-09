@@ -11,6 +11,8 @@ public class duration {
     public int remaingtime;
     public String status;
     private String preemptedBy;
+    private int Quantumm;
+    private int fcaifactor;
     public duration(String processName, int startTime, int endTime, int processId, String color,String status, int remainingTime, int arrivalTime,String preemptedBy) {
         this.ProcessName = processName;
         this.StartTime = startTime;
@@ -21,6 +23,20 @@ public class duration {
         this.processArrivalTime = arrivalTime;
         this.color=color;
         this.preemptedBy=preemptedBy;
+
+    }
+    public duration(String processName, int startTime, int endTime, int processId, String color,String status, int remainingTime, int arrivalTime,String preemptedBy,int Quantum,int fcaifactor) {
+        this.ProcessName = processName;
+        this.StartTime = startTime;
+        this.endTime = endTime;
+        this.id = processId;
+        this.status = status;
+        this.remaingtime = remainingTime;
+        this.processArrivalTime = arrivalTime;
+        this.color=color;
+        this.preemptedBy=preemptedBy;
+        this.Quantumm=Quantum;
+        this.fcaifactor=fcaifactor;
 
     }
     public String getPreemptedBy() {
@@ -83,5 +99,14 @@ public class duration {
 
     public int getRemaingtime() {
         return remaingtime;
+    }
+
+    public int getQuantum() {
+
+        return Quantumm;
+    }
+
+    public int getFcaiFactor() {
+        return fcaifactor;
     }
 }
