@@ -1,15 +1,19 @@
 package CPU.Schedulers;
 
 import CPU.Process;
+
 import java.util.*;
+import CPU.duration;
 
 public class Priority_Scheduling {
     private ArrayList<Process> processes;
     private int contextSwitchTime;
+    private ArrayList<duration> durations;
 
     public Priority_Scheduling(ArrayList<Process> processes, int contextSwitchTime) {
         this.processes = processes;
         this.contextSwitchTime = contextSwitchTime;
+        this.durations = new ArrayList<>();
         executeScheduling();
     }
 
@@ -25,7 +29,7 @@ public class Priority_Scheduling {
             }
 
             if (!executionOrder.isEmpty()) {
-                currentTime += contextSwitchTime;
+                currentTime += contextSwitchTime; // Add context switch time
             }
 
             process.setStartTime(currentTime);
@@ -41,7 +45,10 @@ public class Priority_Scheduling {
 
             process.setEndTime(currentTime + process.getBurstTime());
 
-            currentTime += process.getBurstTime();
+            // Create a GanttSegment for this process
+            durations.add(new duration(process.getName(), currentTime,currentTime + process.getBurstTime(),process.getId(),process.getColor(),"Working", process.getRemainingTime(), process.getArrivalTime()));
+
+            currentTime += process.getBurstTime(); // Move current time forward after executing the process
         }
 
         System.out.println("\nNon-Preemptive Priority Scheduling Results: ");
@@ -58,11 +65,15 @@ public class Priority_Scheduling {
                     process.getEndTime());
         }
 
-
         double averageWaitingTime = (double) totalWaitingTime / processes.size();
         double averageTurnaroundTime = (double) totalTurnaroundTime / processes.size();
 
         System.out.printf("Average Waiting Time: %.2f\n", averageWaitingTime);
         System.out.printf("Average Turnaround Time: %.2f\n", averageTurnaroundTime);
+    }
+
+    // Getter for Gantt segments, used for displaying the Gantt chart
+    public ArrayList<duration> getduration() {
+        return durations;
     }
 }
