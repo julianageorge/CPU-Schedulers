@@ -1,21 +1,20 @@
 package org.os;
 
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.IntervalCategoryToolTipGenerator;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
-import org.jfree.chart.axis.DateAxis;
-import org.jfree.chart.labels.IntervalCategoryToolTipGenerator;
-import org.jfree.chart.plot.CategoryPlot;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.gantt.GanttCategoryDataset;
 import org.jfree.data.gantt.Task;
 import org.jfree.data.gantt.TaskSeries;
 import org.jfree.data.gantt.TaskSeriesCollection;
 import org.jfree.data.time.SimpleTimePeriod;
-
+import org.jfree.chart.plot.CategoryPlot;
 import javax.swing.*;
 import java.awt.*;
 import java.text.MessageFormat;
+import org.jfree.chart.axis.DateAxis;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;

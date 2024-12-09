@@ -73,9 +73,10 @@ public class SJF {
                         currentTime + processToExecute.getBurstTime(),
                         processToExecute.getId(),
                         processToExecute.getColor(),
-                        "Working",
+                        "Completed",
                         processToExecute.getRemainingTime(),
-                        processToExecute.getArrivalTime()
+                        processToExecute.getArrivalTime(),
+                        null
                 ));
 
 

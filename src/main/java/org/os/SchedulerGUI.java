@@ -67,7 +67,7 @@ public class SchedulerGUI extends JFrame {
         add(inputPanel, BorderLayout.NORTH);
         add(contextPanel, BorderLayout.SOUTH);
 
-        tableModel = new DefaultTableModel(new String[]{"Process", "Waiting Time", "Turnaround Time", "Start Time", "End Time"}, 0);
+        tableModel = new DefaultTableModel(new String[]{"Time", "Process", "Status", "Remaining Time"}, 0);
         resultTable = new JTable(tableModel);
         add(new JScrollPane(resultTable), BorderLayout.CENTER);
 
@@ -128,6 +128,7 @@ public class SchedulerGUI extends JFrame {
             JOptionPane.showMessageDialog(this, "Please add at least one process.");
             return;
         }
+
         int context = contextField.getText().isEmpty() ? 0 : Integer.parseInt(contextField.getText());
         String selectedAlgorithm = (String) algorithmBox.getSelectedItem();
 
@@ -139,17 +140,31 @@ public class SchedulerGUI extends JFrame {
         } else if ("Non-Preemptive SJF".equals(selectedAlgorithm)) {
             SJF sjf = new SJF(processes, context);
             durations.addAll(sjf.getduration());
-        } if ("SRTF".equals(selectedAlgorithm)) {
+        } else if ("SRTF".equals(selectedAlgorithm)) {
             SRTF srtf = new SRTF(processes, context);
             durations.addAll(srtf.getduration());
-        } /*else if ("FCAI".equals(selectedAlgorithm)) {
-            FCAI fcai = new FCAI(processes);
-            durations.addAll(fcai.getduration());
-        }*/
+        }
+         /*else if ("FCAI".equals(selectedAlgorithm)) {
+                FCAI fcai = new FCAI(processes);
+                durations.addAll(fcai.getduration());
+            }*/
+
+
+        double totalWaitingTime = 0, totalturnaroundtime = 0;
+        for (Process process : processes) {
+            totalWaitingTime += process.getWaitingTime();
+            totalturnaroundtime += process.getTurnAroundTime();
+        }
+        double avgWaitingTime = totalWaitingTime / processes.size(), avgturnaroundtime = totalturnaroundtime / processes.size();
+
+        // Open Results Form
+        ResultForm resultsForm = new ResultForm(processes, durations, avgWaitingTime, avgturnaroundtime);
+        resultsForm.setVisible(true);
 
         updateTable();
         showGanttChart();
     }
+
 
     private void showGanttChart() {
 
@@ -168,16 +183,21 @@ public class SchedulerGUI extends JFrame {
 
     private void updateTable() {
         tableModel.setRowCount(0);
-        for (Process process : processes) {
+        for (duration process : durations) {
+            String status = process.getStatus();
+            if (process.getPreemptedBy() != null) {
+                status= process.getPreemptedBy()+" preempts  "+process.getProcessName()+", "+status;
+            }
+
             tableModel.addRow(new Object[]{
-                    process.getName(),
-                    process.getWaitingTime(),
-                    process.getTurnAroundTime(),
-                    process.getStartTime(),
-                    process.getEndTime()
+                    process.getStartTime() + "->" + process.getEndTime(),
+                    process.getProcessName(),
+                    status,
+                    process.getRemaingtime()
             });
         }
     }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
