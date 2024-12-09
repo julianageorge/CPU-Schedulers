@@ -46,7 +46,7 @@ public class Priority_Scheduling {
             process.setEndTime(currentTime + process.getBurstTime());
 
             // Create a GanttSegment for this process
-            durations.add(new duration(process.getName(), currentTime,currentTime + process.getBurstTime(),process.getId(),process.getColor(),"Working", process.getRemainingTime(), process.getArrivalTime()));
+            durations.add(new duration(process.getName(), currentTime,currentTime + process.getBurstTime(),process.getId(),process.getColor(),"Completed", process.getRemainingTime(), process.getArrivalTime(),null));
 
             currentTime += process.getBurstTime(); // Move current time forward after executing the process
         }

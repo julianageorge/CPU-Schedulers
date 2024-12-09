@@ -10,7 +10,8 @@ public class duration {
     public String color;
     public int remaingtime;
     public String status;
-    public duration(String processName, int startTime, int endTime, int processId, String color,String status, int remainingTime, int arrivalTime) {
+    private String preemptedBy;
+    public duration(String processName, int startTime, int endTime, int processId, String color,String status, int remainingTime, int arrivalTime,String preemptedBy) {
         this.ProcessName = processName;
         this.StartTime = startTime;
         this.endTime = endTime;
@@ -19,6 +20,15 @@ public class duration {
         this.remaingtime = remainingTime;
         this.processArrivalTime = arrivalTime;
         this.color=color;
+        this.preemptedBy=preemptedBy;
+
+    }
+    public String getPreemptedBy() {
+        return preemptedBy;
+    }
+
+    public void setPreemptedBy(String preemptedBy) {
+        this.preemptedBy = preemptedBy;
     }
 
     public String getColor() {
@@ -61,12 +71,17 @@ public class duration {
     }
     @Override
     public String toString() {
+        String preemptStatus = (preemptedBy == null) ? "" : "Preempted by: " + preemptedBy + " ";
         return String.format(
-                "Process: %s, Start Time: %d, End Time: %d, Process ID: %d, Status: %s, Remaining Time: %d, Arrival Time: %d",
-                ProcessName, StartTime, endTime, id, status,remaingtime , processArrivalTime
+                "Process: %s, Start Time: %d, End Time: %d, Process ID: %d, Status: %s, Remaining Time: %d, Arrival Time: %d %s",
+                ProcessName, StartTime, endTime, id, status, remaingtime, processArrivalTime, preemptStatus
         );
     }
     public void setColor(String color) {
         this.color = color;
+    }
+
+    public int getRemaingtime() {
+        return remaingtime;
     }
 }

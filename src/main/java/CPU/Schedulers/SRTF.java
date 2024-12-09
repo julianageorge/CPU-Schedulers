@@ -19,6 +19,7 @@ public class SRTF {
         this.durations = new ArrayList<>();
         executeScheduling();
     }
+
     private void executeScheduling() {
         int currentTime = 0, completed = 0, totalWaitingTime = 0, totalTurnaroundTime = 0;
         int n = processes.size();
@@ -63,21 +64,22 @@ public class SRTF {
                 if (currentProcess != shortedProcess) {
 
                     if (currentProcess != null && startTime != -1) {
+                        // Store the duration with the preemption info
                         duration prevDuration = new duration(
                                 currentProcess.getName(),
                                 startTime,
                                 currentTime,
                                 currentProcess.getId(),
                                 currentProcess.getColor(),
-                                "Working",
+                                "runs for "+ (currentTime-startTime)+" Units",
                                 currentProcess.getRemainingTime(),
-                                currentProcess.getArrivalTime()
+                                currentProcess.getArrivalTime(),
+                                shortedProcess.getName()
                         );
                         durations.add(prevDuration);
                     }
 
-
-                    if (currentProcess!=null) {
+                    if (currentProcess != null) {
                         currentTime += contextSwitchTime;
                     }
 
@@ -85,8 +87,6 @@ public class SRTF {
                     currentProcess = shortedProcess;
                     startTime = currentTime;
                 }
-
-
 
                 if (shortedProcess.getRemainingTime() == shortedProcess.getBurstTime()) {
                     shortedProcess.setStartTime(currentTime);
@@ -114,11 +114,11 @@ public class SRTF {
                             shortedProcess.getColor(),
                             "Completed",
                             0,
-                            shortedProcess.getArrivalTime()
+                            shortedProcess.getArrivalTime(),
+                            null  // No preemption on completion
                     );
                     durations.add(finalDuration);
-                    //currentProcess = null;
-                     complete =true;
+                    complete = true;
                     startTime = -1;
                 } else {
                     readyQueue.add(shortedProcess);
@@ -150,6 +150,7 @@ public class SRTF {
         System.out.printf("Average Waiting Time: %.2f\n", averageWaitingTime);
         System.out.printf("Average Turnaround Time: %.2f\n", averageTurnaroundTime);
     }
+
     public ArrayList<duration> getduration() {
         return durations;
     }
