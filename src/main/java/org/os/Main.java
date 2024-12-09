@@ -73,7 +73,7 @@ public class Main {
 
             case 4:
                 receive_processes_data(numProcess, true);
-                FCAI fcai = new FCAI(processes);
+                FCAI fcai = new FCAI(processes , contextSwitchTime);
                 break;
 
             default:
