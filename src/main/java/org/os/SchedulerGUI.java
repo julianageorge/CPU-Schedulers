@@ -10,6 +10,8 @@ import CPU.duration;
 public class SchedulerGUI extends JFrame {
     private ArrayList<Process> processes = new ArrayList<>();
     private ArrayList<duration> durations = new ArrayList<>();
+    private ArrayList<Process> completeprocesses = new ArrayList<>();
+
     private JTextField nameField, colorField, arrivalField, burstField, priorityField, quantumField, contextField;
     public static JComboBox<String> algorithmBox;
     private JButton addButton, scheduleButton;
@@ -26,14 +28,9 @@ public class SchedulerGUI extends JFrame {
         GridBagConstraints gbc = new GridBagConstraints();
         inputPanel.setBorder(BorderFactory.createTitledBorder("Add Process"));
 
-        // Layout Setup
         addComponent(inputPanel, new JLabel("Process Name:"), 0, 0, gbc);
         nameField = new JTextField(15);
         addComponent(inputPanel, nameField, 1, 0, gbc);
-
-        addComponent(inputPanel, new JLabel("Process Color:"), 0, 1, gbc);
-        colorField = new JTextField(15);
-        addComponent(inputPanel, colorField, 1, 1, gbc);
 
         addComponent(inputPanel, new JLabel("Arrival Time:"), 0, 2, gbc);
         arrivalField = new JTextField(15);
@@ -67,9 +64,7 @@ public class SchedulerGUI extends JFrame {
         add(inputPanel, BorderLayout.NORTH);
         add(contextPanel, BorderLayout.SOUTH);
 
-        tableModel = new DefaultTableModel(new String[]{"Time", "Process", "Status", "Remaining Time"}, 0);
-        resultTable = new JTable(tableModel);
-        add(new JScrollPane(resultTable), BorderLayout.CENTER);
+
 
         addButton.addActionListener(e -> addProcess());
         scheduleButton.addActionListener(e -> scheduleProcesses());
@@ -137,33 +132,59 @@ public class SchedulerGUI extends JFrame {
         if ("Non-Preemptive Priority".equals(selectedAlgorithm)) {
             Priority_Scheduling ps = new Priority_Scheduling(processes, context);
             durations.addAll(ps.getduration());
+            SchedulingResultsForm resultsForm = new SchedulingResultsForm(processes, durations);
+            resultsForm.setVisible(true);
         } else if ("Non-Preemptive SJF".equals(selectedAlgorithm)) {
             SJF sjf = new SJF(processes, context);
             durations.addAll(sjf.getduration());
+            completeprocesses=sjf.getCompletedProcess();
+            SchedulingResultsForm resultsForm = new SchedulingResultsForm(processes, durations);
+            resultsForm.setVisible(true);
         } else if ("SRTF".equals(selectedAlgorithm)) {
             SRTF srtf = new SRTF(processes, context);
             durations.addAll(srtf.getduration());
+            SchedulingResultsForm resultsForm = new SchedulingResultsForm(processes, durations);
+            resultsForm.setVisible(true);
+        } else if ("FCAI".equals(selectedAlgorithm)) {
+            FCAI fcai = new FCAI(processes,context);
+            durations.addAll(fcai.getduration());
+            FCAIForm fcaiForm = new FCAIForm(processes, durations);
+            fcaiForm.setVisible(true);
         }
-         /*else if ("FCAI".equals(selectedAlgorithm)) {
-                FCAI fcai = new FCAI(processes);
-                durations.addAll(fcai.getduration());
-            }*/
 
-
-        double totalWaitingTime = 0, totalturnaroundtime = 0;
+        double totalWaitingTime = 0, totalTurnaroundTime = 0;
+        if((String) algorithmBox.getSelectedItem()!="Non-Preemptive SJF"){
         for (Process process : processes) {
             totalWaitingTime += process.getWaitingTime();
-            totalturnaroundtime += process.getTurnAroundTime();
+            totalTurnaroundTime += process.getTurnAroundTime();
         }
-        double avgWaitingTime = totalWaitingTime / processes.size(), avgturnaroundtime = totalturnaroundtime / processes.size();
+            double avgWaitingTime = totalWaitingTime / processes.size();
+            double avgTurnaroundTime = totalTurnaroundTime / processes.size();
 
-        // Open Results Form
-        ResultForm resultsForm = new ResultForm(processes, durations, avgWaitingTime, avgturnaroundtime);
-        resultsForm.setVisible(true);
+            // Open Results Form
+            ResultForm resultsForm = new ResultForm(processes, durations, avgWaitingTime, avgTurnaroundTime);
+            resultsForm.setVisible(true);
 
-        updateTable();
+        }
+        else{
+
+            for ( Process process : completeprocesses) {
+                totalWaitingTime += process.getWaitingTime();
+                totalTurnaroundTime += process.getTurnAroundTime();
+            }
+            double avgWaitingTime = totalWaitingTime / completeprocesses.size();
+            double avgTurnaroundTime = totalTurnaroundTime / completeprocesses.size();
+
+            // Open Results Form
+            ResultForm resultsForm = new ResultForm(completeprocesses, durations, avgWaitingTime, avgTurnaroundTime);
+            resultsForm.setVisible(true);
+
+        }
+
         showGanttChart();
     }
+
+
 
 
     private void showGanttChart() {
@@ -181,22 +202,6 @@ public class SchedulerGUI extends JFrame {
     }
 
 
-    private void updateTable() {
-        tableModel.setRowCount(0);
-        for (duration process : durations) {
-            String status = process.getStatus();
-            if (process.getPreemptedBy() != null) {
-                status= process.getPreemptedBy()+" preempts  "+process.getProcessName()+", "+status;
-            }
-
-            tableModel.addRow(new Object[]{
-                    process.getStartTime() + "->" + process.getEndTime(),
-                    process.getProcessName(),
-                    status,
-                    process.getRemaingtime()
-            });
-        }
-    }
 
 
     public static void main(String[] args) {

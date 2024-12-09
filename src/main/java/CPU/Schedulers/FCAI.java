@@ -1,6 +1,8 @@
 package CPU.Schedulers;
 
 import CPU.Process;
+import CPU.duration;
+
 import java.util.*;
 
 public class FCAI {
@@ -8,6 +10,7 @@ public class FCAI {
     private double V1, V2;
     private int contextSwitchTime;
     private int totalTime;
+    private ArrayList<duration> durations;
 
     public FCAI(ArrayList<Process> processes , int contextSwitch) {
         this.processes = processes;
@@ -131,5 +134,8 @@ public class FCAI {
         }
         System.out.println("Processes Execution Order: " + String.join(" - ", executionOrder));
 
+    }
+    public ArrayList<duration> getduration() {
+        return durations;
     }
 }
