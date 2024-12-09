@@ -7,9 +7,10 @@ public class duration {
     public int processArrivalTime;
     public int processBurstTime;
     public int id;
+    public String color;
     public int remaingtime;
     public String status;
-    public duration(String processName, int startTime, int endTime, int processId, String status, int remainingTime, int arrivalTime) {
+    public duration(String processName, int startTime, int endTime, int processId, String color,String status, int remainingTime, int arrivalTime) {
         this.ProcessName = processName;
         this.StartTime = startTime;
         this.endTime = endTime;
@@ -17,6 +18,11 @@ public class duration {
         this.status = status;
         this.remaingtime = remainingTime;
         this.processArrivalTime = arrivalTime;
+        this.color=color;
+    }
+
+    public String getColor() {
+        return color;
     }
 
     public int getStartTime() {
@@ -43,6 +49,13 @@ public class duration {
         this.status = status;
     }
 
+    public int getId() {
+        return id;
+    }
+
+
+
+
     public String getProcessName() {
         return ProcessName;
     }
@@ -52,5 +65,8 @@ public class duration {
                 "Process: %s, Start Time: %d, End Time: %d, Process ID: %d, Status: %s, Remaining Time: %d, Arrival Time: %d",
                 ProcessName, StartTime, endTime, id, status,remaingtime , processArrivalTime
         );
+    }
+    public void setColor(String color) {
+        this.color = color;
     }
 }

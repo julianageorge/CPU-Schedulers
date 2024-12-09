@@ -1,6 +1,7 @@
 package CPU.Schedulers;
 
 import CPU.Process;
+import CPU.duration;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -8,17 +9,19 @@ import java.util.PriorityQueue;
 
 public class SJF {
     private ArrayList<Process> processes;
+    private ArrayList<duration> durations;
     private int contextSwitchTime;
     private int agingFactor = 1;
     public SJF(ArrayList<Process> processes, int contextSwitchTime) {
         this.processes=processes;
         this.contextSwitchTime=contextSwitchTime;
+        this.durations = new ArrayList<>();
         executeSchuduling();
     }
     private void executeSchuduling(){
         processes.sort(Comparator.comparingInt(Process::getArrivalTime).thenComparingInt(Process::getBurstTime));
         for (Process process : processes) {
-                process.setPriorityNum(process.getBurstTime());
+            process.setPriorityNum(process.getBurstTime());
         }
         PriorityQueue<Process> readyQueue = new PriorityQueue<>(Comparator.comparingInt(Process::getPriorityNum)
                 .thenComparingInt(Process::getArrivalTime));
@@ -27,21 +30,17 @@ public class SJF {
         ArrayList<Process> completedProcess = new ArrayList<>();
 
         while (!processes.isEmpty()) {
-             for (Process process : processes) {
+            for (Process process : processes) {
                 if (process.getArrivalTime() <= currentTime && !readyQueue.contains(process)) {
                     readyQueue.add(process);
 //                    process.setPriorityNum(process.getBurstTime());
                 }
             }
-            PriorityQueue<Process> temp = new PriorityQueue<>(Comparator.comparingInt(Process::getPriorityNum)
-                    .thenComparingInt(Process::getArrivalTime));
-            while (! readyQueue.isEmpty()) {
-                Process process= readyQueue.poll();
+
+            for (Process process : readyQueue) {
                 int waitingTime = currentTime - process.getArrivalTime();
                 process.setPriorityNum(process.getPriorityNum() - (waitingTime / agingFactor));// checking
-                temp.add(process);
             }
-            readyQueue = temp;
 
             if (!readyQueue.isEmpty()) {
                 Process processToExecute = readyQueue.poll();
@@ -68,6 +67,17 @@ public class SJF {
                 totalTurnaroundTime += turnaroundTime;
 
                 processToExecute.setEndTime(currentTime + processToExecute.getBurstTime());
+                durations.add(new duration(
+                        processToExecute.getName(),
+                        currentTime,
+                        currentTime + processToExecute.getBurstTime(),
+                        processToExecute.getId(),
+                        processToExecute.getColor(),
+                        "Working",
+                        processToExecute.getRemainingTime(),
+                        processToExecute.getArrivalTime()
+                ));
+
 
                 currentTime += processToExecute.getBurstTime();
             } else {
@@ -95,6 +105,9 @@ public class SJF {
 
         System.out.printf("Average Waiting Time: %.2f\n", averageWaitingTime);
         System.out.printf("Average Turnaround Time: %.2f\n", averageTurnaroundTime);
+    }
+    public ArrayList<duration> getduration() {
+        return durations;
     }
 
 }
