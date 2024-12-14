@@ -6,6 +6,7 @@ public class duration {
     public  int StartTime;
     public int processArrivalTime;
     public int processBurstTime;
+    public int priority;
     public int id;
     public String color;
     public int remaingtime;
@@ -25,7 +26,7 @@ public class duration {
         this.preemptedBy=preemptedBy;
 
     }
-    public duration(String processName, int startTime, int endTime, int processId, String color,String status, int remainingTime, int arrivalTime,String preemptedBy,int Quantum,int fcaifactor) {
+    public duration(String processName, int startTime, int endTime, int processId, String color,String status, int remainingTime, int arrivalTime,String preemptedBy,int Quantum,int priority,int fcaifactor) {
         this.ProcessName = processName;
         this.StartTime = startTime;
         this.endTime = endTime;
@@ -35,6 +36,7 @@ public class duration {
         this.processArrivalTime = arrivalTime;
         this.color=color;
         this.preemptedBy=preemptedBy;
+        this.priority=priority;
         this.Quantumm=Quantum;
         this.fcaifactor=fcaifactor;
 
@@ -79,8 +81,9 @@ public class duration {
         return id;
     }
 
-
-
+    public int getPriority() {
+        return priority;
+    }
 
     public String getProcessName() {
         return ProcessName;
