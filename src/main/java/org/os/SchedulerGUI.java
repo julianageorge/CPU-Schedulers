@@ -12,7 +12,7 @@ public class SchedulerGUI extends JFrame {
     private ArrayList<duration> durations = new ArrayList<>();
     private ArrayList<Process> completeprocesses = new ArrayList<>();
 
-    private JTextField nameField, colorField, arrivalField, burstField, priorityField, quantumField, contextField;
+    private JTextField nameField, arrivalField, burstField, priorityField, quantumField, contextField;
     public static JComboBox<String> algorithmBox;
     private JButton addButton, scheduleButton;
     private JTable resultTable;
@@ -82,23 +82,17 @@ public class SchedulerGUI extends JFrame {
     private void addProcess() {
         try {
             String name = nameField.getText();
-            String color = colorField.getText().trim();
             int arrival = Integer.parseInt(arrivalField.getText());
             int burst = Integer.parseInt(burstField.getText());
             int priority = Integer.parseInt(priorityField.getText());
             int quantum = quantumField.getText().isEmpty() ? 0 : Integer.parseInt(quantumField.getText());
 
-            // Validate color format
-            if (!color.startsWith("#") || color.length() != 7) {
-                JOptionPane.showMessageDialog(this, "Invalid color format. Please use hex format like #FF0000.");
-                return;
-            }
 
 
             int id = idCounter++;
 
 
-            Process process = new Process(name, id, color, arrival, burst, priority, quantum);
+            Process process = new Process(name, id, arrival, burst, priority, quantum);
             processes.add(process);
 
             JOptionPane.showMessageDialog(this, "Process added successfully!");
@@ -110,7 +104,6 @@ public class SchedulerGUI extends JFrame {
 
     private void clearFields() {
         nameField.setText("");
-        colorField.setText("");
         arrivalField.setText("");
         burstField.setText("");
         priorityField.setText("");
@@ -148,12 +141,13 @@ public class SchedulerGUI extends JFrame {
         } else if ("FCAI".equals(selectedAlgorithm)) {
             FCAI fcai = new FCAI(processes,context);
             durations.addAll(fcai.getduration());
+            completeprocesses=fcai.getCompletedProcess();
             FCAIForm fcaiForm = new FCAIForm(processes, durations);
             fcaiForm.setVisible(true);
         }
 
         double totalWaitingTime = 0, totalTurnaroundTime = 0;
-        if((String) algorithmBox.getSelectedItem()!="Non-Preemptive SJF"){
+        if((String) algorithmBox.getSelectedItem()!="Non-Preemptive SJF"&&(String) algorithmBox.getSelectedItem()!="FCAI"){
         for (Process process : processes) {
             totalWaitingTime += process.getWaitingTime();
             totalTurnaroundTime += process.getTurnAroundTime();

@@ -20,8 +20,6 @@ public class Main {
         for (int i = 0; i < num; i++) {
             System.out.println("Please enter name of process " + (i + 1) + ":");
             ProcessName = input.next();
-            System.out.println("Please enter color of process " + ProcessName + ":");
-            ProcessColor = input.next();
             System.out.println("Please enter arrival time of process " + ProcessName + ":");
             ArrivalTime = input.nextInt();
             System.out.println("Please enter burst time of process " + ProcessName + ":");
@@ -34,7 +32,7 @@ public class Main {
                 RRTimeQuantum = input.nextInt();
             }
 
-            processes.add(new Process(ProcessName,i,ProcessColor, ArrivalTime, BurstTime, priorityNum, (flag ? RRTimeQuantum : 0)));
+            processes.add(new Process(ProcessName,i, ArrivalTime, BurstTime, priorityNum, (flag ? RRTimeQuantum : 0)));
         }
 
         if (!flag) {

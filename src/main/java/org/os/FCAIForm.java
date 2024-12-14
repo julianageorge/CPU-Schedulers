@@ -18,17 +18,24 @@ public class FCAIForm extends JFrame {
         setLayout(new BorderLayout());
 
 
-        tableModel = new DefaultTableModel(new String[]{"Time", "Process", "Status", "Remaining Time", "Quantum", "FCAI Factor"}, 0);
+        tableModel = new DefaultTableModel(new String[]{"Time", "Process", "Status", "Remaining Time", "Quantum", "Priority","FCAI Factor"}, 0);
         table = new JTable(tableModel);
         add(new JScrollPane(table), BorderLayout.CENTER);
 
         for (duration process : durations) {
+            String quantumStatus = process.getRemaingtime() == 0 ? "Complete" : String.valueOf(process.getQuantum());
+            String status = process.getStatus();
+            if (process.getPreemptedBy() != null) {
+                status = process.getPreemptedBy() + " preempts " + process.getProcessName() + ", " + status;
+            }
+
             tableModel.addRow(new Object[]{
                     process.getStartTime() + "->" + process.getEndTime(),
                     process.getProcessName(),
-                    process.getStatus(),
+                    status,
                     process.getRemaingtime(),
-                   process.getQuantum(),
+                   quantumStatus,
+                    process.getPriority(),
                     process.getFcaiFactor()
             });
         }

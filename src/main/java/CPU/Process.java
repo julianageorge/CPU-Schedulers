@@ -24,9 +24,8 @@ public class Process implements Comparable<Process> {
         this.priorityNum=Priority;
         this.id=id;
     }
-    public Process(String Name,int id,String Color,int arrivalTime,int BurstTime,int Priority,int quantumTime){// if RR
+    public Process(String Name,int id,int arrivalTime,int BurstTime,int Priority,int quantumTime){// if RR
         this.processName=Name;
-        this.processColor=Color;
         this.processArrivalTime=arrivalTime;
         this.processBurstTime=BurstTime;
         this.quantumTime=quantumTime;
